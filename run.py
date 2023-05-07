@@ -40,4 +40,4 @@ class Run():
 if __name__ == '__main__':
     run = Run('cuda', 128, 1)
     train, val, test = run.dataset()
-    model = run.model(train, val, tl_model_ex=True)
+    model = run.model(train, val)
