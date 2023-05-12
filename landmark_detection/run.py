@@ -12,7 +12,7 @@ class Run():
 
     def dataset(self):
         main_folder_path = os.getcwd()
-        data = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Test_Images_f_1.csv",
+        data = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Train_Images_f_1.csv",
                             r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data")
         data_loader = DataLoader(data, batch_size=self.batch_size, drop_last=True)
 
