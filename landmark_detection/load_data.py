@@ -33,9 +33,3 @@ class Load_data(IterableDataset):
 
     def __iter__(self):
         return self.parse_file()
-    
-if __name__== "__main__":
-    load = Load_data("train_data/list3.txt", "train_data")
-    data_loader = DataLoader(load, batch_size=16, drop_last=True)
-    for image, label in data_loader:
-        print(image.size())
