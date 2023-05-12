@@ -39,8 +39,8 @@ if __name__ == "__main__":
         plt.plot(122*label[3].item(), 122*label[2].item(), color='red', marker="o")
         plt.plot(122*pred[1].item(), 122*pred[0].item(), marker="v", color='blue')
         plt.plot(122*pred[3].item(), 122*pred[2].item(), color='blue', marker="v")
-        pred_angles = [(round(180*(angle.item() - 0.5), 2)) for angle in pred[4:]]
-        label_angles = [(round(180*(angle.item() - 0.5), 2)) for angle in label[4:]]
+        pred_angles = [(round(360*(angle.item() - 0.5), 2)) for angle in pred[4:]]
+        label_angles = [(round(360*(angle.item() - 0.5), 2)) for angle in label[4:]]
         plt.axis('off')
         plt.title(f"Predicted Euler angles vs ground truth angles: \n {pred_angles} vs {label_angles}", fontsize=10)
     plt.show()

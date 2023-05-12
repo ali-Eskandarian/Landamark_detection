@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from custom_loss import CustomLoss
 
 class Train():                                                  
   
@@ -11,17 +12,18 @@ class Train():
 
     def compile(self, loss_f="BCE_LL", optimizer='Adam', learning_rate=0.0001):                 # compile loss and optimizer for training
        
+        self.loss_f = CustomLoss()
         if loss_f == "BCE_LL":
-            self.loss_f = nn.BCEWithLogitsLoss()                                                # set BinaryCrossEntropy loss function for non normal output as operator's preference
+            self.loss_f_1 = nn.BCEWithLogitsLoss()                                                # set BinaryCrossEntropy loss function for non normal output as operator's preference
         
         elif  loss_f=="BCE":
-           self.loss_f = nn.BCELoss()                                                           # set BinaryCrossEntropy loss function as operator's preference for binary classification
+           self.loss_f_1 = nn.BCELoss()                                                           # set BinaryCrossEntropy loss function as operator's preference for binary classification
         
         elif loss_f=="CE":
-            self.loss_f = nn.CrossEntropyLoss()                                                 # set CrossEntropy loss function as operator's preference for multiclass classification
+            self.loss_f_1 = nn.CrossEntropyLoss()                                                 # set CrossEntropy loss function as operator's preference for multiclass classification
         
         elif loss_f=="MSE":
-            self.loss_f = nn.MSELoss()                                                          # set Mean Squared Error loss function as operator's preference for regression problems
+            self.loss_f_1 = nn.MSELoss()                                                          # set Mean Squared Error loss function as operator's preference for regression problems
         
         if optimizer == "Adam":
            self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)         # set Adam optimizer as operator's preference
@@ -37,8 +39,9 @@ class Train():
 
                 preds = self.model(images)                                                      # pass the image to the model to obtain the output
                 preds = preds.squeeze_()                                                        # squeeze the outputs of the model to be more convenient to use
-                loss = self.loss_f(preds, labels)                                               # compute loss between the training examples and the outputs of the model
-
+                loss_p = self.loss_f_1(preds[:, :4], labels[:, :4])                             # compute loss between the training examples and the outputs of the model
+                loss_a = self.loss_f(preds[:, 4:], labels[:, 4:])
+                loss = loss_a + loss_p                               # compute loss between the training examples and the outputs of the model
                 loss.backward()                                                                 # back propagate the loss
                 self.optimizer.step()                                                           # compute the backpropagation step by optimizer function
                 self.optimizer.zero_grad()

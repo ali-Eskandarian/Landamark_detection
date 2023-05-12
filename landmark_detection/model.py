@@ -2,7 +2,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 import torch
-
 class Model(nn.Module):
   
   def __init__(self, initial_filter_size, batch_size):
@@ -43,9 +42,9 @@ class Model(nn.Module):
     x = x.view([batch, -1])
 
     x = F.relu(self.lin1(x))
-    x = self.lin2(x)
+    out = torch.clone(F.sigmoid(self.lin2(x)))
 
-    return x
+    return out
   
   def tl_model(self, main_model="resnet"):
     

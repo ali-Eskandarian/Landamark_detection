@@ -1,5 +1,5 @@
-"""labels_path = "test_data/list.txt"
-images_path = "test_data"
+"""labels_path = "train_data/list3.txt"
+images_path = "train_data"
 import numpy as np
 file_list = [["Jaw x", "Jaw y", "Nose x", "Nose y", "Alpha", "Beta", "Gama", "Image Path"]]
 with open(labels_path, 'r') as list_of_labels:
@@ -22,7 +22,8 @@ import pandas as pd
 from PIL import Image
 
 data = pd.read_csv("Test_Images.csv")
-delete_rows = []
+print(min(data[' Alpha']))
+"""delete_rows = []
 for i in range(len(data)):
     try:
         Image.open(data.iloc[i, 7][1:])
@@ -31,4 +32,4 @@ for i in range(len(data)):
         delete_rows.append(i)
 
 new_data = data.drop(delete_rows, axis=0)
-new_data.to_csv("Clean_Test_Images.csv", index=False)
+new_data.to_csv("Clean_Test_Images.csv", index=False)"""
