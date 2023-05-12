@@ -8,5 +8,9 @@ model.load_state_dict(torch.load("model/landmark_detection/model.pt"))
 data = Load_data("test_data/list.txt", "test_data")
 data_loader = torch.utils.data.DataLoader(data)
 
-eval = Evaluate(model, 'cpu')
-eval.show_test_results(data_loader)
+#eval = Evaluate(model, 'cpu')
+#eval.show_test_results(data_loader)
+loader = iter(data_loader)
+for i in range(2):
+    im, lb = next(loader)
+    print(im.shape)
