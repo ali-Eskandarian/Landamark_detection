@@ -1,79 +1,70 @@
 import torch
 import torch.nn as nn
 
-class Train():
+class Train():                                                  
   
-    def __init__(self, model, number_of_epochs : int, device):
+    def __init__(self, model, number_of_epochs : int, device = 'cpu'):
 
-        self.model = model
-        self.number_of_epochs = number_of_epochs
-        self.device = device
+        self.model = model                                                                      # model to train
+        self.number_of_epochs = number_of_epochs                                                # number of training epochs
+        self.device = device                                                                    # device to train on
 
-    def compile(self, loss_f="BCE_LL", optimizer='Adam', learning_rate=0.0001):
+    def compile(self, loss_f="BCE_LL", optimizer='Adam', learning_rate=0.0001):                 # compile loss and optimizer for training
        
         if loss_f == "BCE_LL":
-            self.loss_f = nn.BCEWithLogitsLoss()             
+            self.loss_f = nn.BCEWithLogitsLoss()                                                # set BinaryCrossEntropy loss function for non normal output as operator's preference
+        
         elif  loss_f=="BCE":
-           self.loss_f = nn.BCELoss()
+           self.loss_f = nn.BCELoss()                                                           # set BinaryCrossEntropy loss function as operator's preference for binary classification
+        
         elif loss_f=="CE":
-            self.loss_f = nn.CrossEntropyLoss()
+            self.loss_f = nn.CrossEntropyLoss()                                                 # set CrossEntropy loss function as operator's preference for multiclass classification
+        
         elif loss_f=="MSE":
-            self.loss_f = nn.MSELoss()
+            self.loss_f = nn.MSELoss()                                                          # set Mean Squared Error loss function as operator's preference for regression problems
         
         if optimizer == "Adam":
-           self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
+           self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)         # set Adam optimizer as operator's preference
     
-    def train(self, train_loader, verbose=True):
+    def train(self, train_loader, verbose=True):                                                # define the training loop
         
         for epoch in range(self.number_of_epochs):
-            total_loss = 0.0
+            total_loss = 0.0                                                                    # at the beginning of each epoch, the loss will be assigned to zer0
 
-            for images, labels in train_loader:
-                images = images.to(self.device)
-                labels = labels.to(self.device)
+            for images, labels in train_loader:                                                 # iterate through training examples
+                images = images.to(self.device)                                                 # save the batch of images in device memory
+                labels = labels.to(self.device)                                                 # save the batch of labels in device memory
 
-                preds = self.model(images)
-                preds = preds.squeeze_()
-                loss = self.loss_f(preds, labels)
+                preds = self.model(images)                                                      # pass the image to the model to obtain the output
+                preds = preds.squeeze_()                                                        # squeeze the outputs of the model to be more convenient to use
+                loss = self.loss_f(preds, labels)                                               # compute loss between the training examples and the outputs of the model
 
-                loss.backward()
-                self.optimizer.step()
+                loss.backward()                                                                 # back propagate the loss
+                self.optimizer.step()                                                           # compute the backpropagation step by optimizer function
                 self.optimizer.zero_grad()
     
-                total_loss += loss.item()
-  
-            """self.model.eval()
-            val_total_loss = 0
-            for val_images, val_labels in val_loader:
-                val_images = val_images.to(self.device)
-                val_labels = val_labels.to(self.device)
+                total_loss += loss.item()                                                       # add loss of each batch to the total loss of the epoch
 
-                val_preds = self.model(val_images)
-                val_preds = val_preds.squeeze_()
-                val_loss = self.loss_f(val_preds, val_labels)
-    
-                val_total_loss += val_loss.item()"""
-
-            if verbose==True:
-                print(f'For the epoch number {epoch+1}: The training loss is {total_loss}.')
+            if verbose==True:                                                                   
+                print(f'For the epoch number {epoch+1}: The training loss is {total_loss}.')    # if the verbose flag is set to True, print the training loss value
         
-        return self.model
+        return self.model                                                                       # return the trained model
     
-    def n_parameters(model):
+    def n_parameters(model):                                                                    # compute the number of parameters
         
         total_par = 0
-        for par in model.parameters():
-            if par.requires_grad :
-                total_par += par.numel()
+        for par in model.parameters():                                                          # iterate through model parameters
+            if par.requires_grad :                                                              # compute only the trainable parameters
+                total_par += par.numel()                                                        # add the number of parameters of each layer to the total number of parameters
 
         print(f"Total number of trainable paramaters for this model is {total_par}")
 
     def save_model(self, path : str):
 
-        torch.save(self.model.state_dict(), path)
+        torch.save(self.model.state_dict(), path)                                               # save the model parameters
 
     def load_model(model, path):
         
-        model.load_state_dict(torch.load(path))
+        model.load_state_dict(torch.load(path))                                                 # load the presaved model parameters
 
         return model
