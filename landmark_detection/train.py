@@ -32,10 +32,11 @@ class Train():
         
         for epoch in range(self.number_of_epochs):
             total_loss = 0.0                                                                    # at the beginning of each epoch, the loss will be assigned to zer0
-
-            for images, labels in train_loader:                                                 # iterate through training examples
-                images = images.to(self.device)                                                 # save the batch of images in device memory
-                labels = labels.to(self.device)                                                 # save the batch of labels in device memory
+            batch = 0
+            for images, labels in train_loader:                                                  # iterate through training examples
+                batch += 1
+                images = images.to(self.device).to(torch.float32)                                               # save the batch of images in device memory
+                labels = labels.to(self.device)  .to(torch.float32)                                                # save the batch of labels in device memory
 
                 preds = self.model(images)                                                      # pass the image to the model to obtain the output
                 preds = preds.squeeze_()                                                        # squeeze the outputs of the model to be more convenient to use
@@ -47,7 +48,8 @@ class Train():
                 self.optimizer.zero_grad()
     
                 total_loss += loss.item()                                                       # add loss of each batch to the total loss of the epoch
-
+                if batch%1000 == 0:
+                    print(f"Loss[batch = {batch}]= {loss.item()}  , total_loss = {total_loss}")
             if verbose==True:                                                                   
                 print(f'For the epoch number {epoch+1}: The training loss is {total_loss}.')    # if the verbose flag is set to True, print the training loss value
         

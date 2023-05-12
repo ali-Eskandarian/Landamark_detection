@@ -13,7 +13,7 @@ with open(labels_path, 'r') as list_of_labels:
         image_path = images_path + "/imgs_masked/" + label_name[:-4] + "_surgical.png"
         njea.append(image_path)
         file_list.append(njea)
-print(file_list)
+print(file_list)a
 file_list = np.array(file_list)
 np.savetxt("Test_Images.csv", file_list, delimiter=", ", fmt="% s")"""
 
