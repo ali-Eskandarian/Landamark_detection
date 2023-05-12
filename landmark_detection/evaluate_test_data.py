@@ -35,10 +35,10 @@ if __name__ == "__main__":
         plt.subplot(4, 4, index+1)
         plt.imshow(image.permute(1, 2, 0))
         pred = pred.squeeze()
-        plt.plot(122*label[1].item(), 122*label[0].item(), marker="o", color='red')
-        plt.plot(122*label[3].item(), 122*label[2].item(), color='red', marker="o")
-        plt.plot(122*pred[1].item(), 122*pred[0].item(), marker="v", color='blue')
-        plt.plot(122*pred[3].item(), 122*pred[2].item(), color='blue', marker="v")
+        plt.plot(112*label[1].item(), 112*label[0].item(), marker="o", color='red')
+        plt.plot(112*label[3].item(), 112*label[2].item(), color='red', marker="o")
+        plt.plot(112*pred[1].item(), 112*pred[0].item(), marker="v", color='blue')
+        plt.plot(112*pred[3].item(), 112*pred[2].item(), color='blue', marker="v")
         pred_angles = [(round(360*(angle.item() - 0.5), 2)) for angle in pred[4:]]
         label_angles = [(round(360*(angle.item() - 0.5), 2)) for angle in label[4:]]
         plt.axis('off')
