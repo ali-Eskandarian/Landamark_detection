@@ -9,6 +9,7 @@ from torchvision import transforms
 from skimage import io
 import numpy as np
 
+
 # class Load_data(IterableDataset):
 #     def __init__(self, labels_path, images_path):
 #
@@ -65,7 +66,6 @@ class Dataset_lip(Dataset):
         return image, y_label
 
 
-data_train = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Test_Images_f_1.csv",
-                        r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data")
-train_loader = DataLoader(dataset=data_train, batch_size = 1, shuffle=True)
-
+data_train = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Train_Images_f_1.csv",
+                         r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data")
+train_loader = DataLoader(dataset=data_train, batch_size=1, shuffle=True)
