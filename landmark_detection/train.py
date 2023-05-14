@@ -6,8 +6,10 @@ import matplotlib.pyplot as plt
 
 class Train:
     def __init__(self, model, number_of_epochs: int, path_saving: str, device='cpu'):
-        self.val_losses_p = None
-        self.val_losses_a = None
+        self.val_losses_positions = None
+        self.losses_positions = None
+        self.losses_angles = None
+        self.val_losses_angles = None
         self.val_losses = None
         self.optimizer = None
         self.loss_f_1 = None
@@ -43,9 +45,12 @@ class Train:
     def train(self, train_loader, val_loader, verbose=True):
         # define the training loop
         self.losses, self.val_losses = [], []
+        self.losses_angles, self.val_losses_angles = [], []
+        self.losses_positions, self.val_losses_positions = [], []
         Length = len(train_loader)
         for epoch in range(self.number_of_epochs):
-            total_loss, loss_angle, loss_position = 0.0, 0, 0  # at the beginning of each epoch, the loss will be assigned to zer0
+            total_loss, loss_angle, loss_position = 0.0, 0, 0
+            # at the beginning of each epoch, the loss will be assigned to zer0
             batch = 0
             for images, labels in train_loader:  # iterate through training examples
                 batch += 1
@@ -72,6 +77,8 @@ class Train:
                           f"  , total_loss = {total_loss}")
                     print(f"Loss_angle = {loss_a} and Loss Points =  {loss_p}")
             self.losses.append(total_loss)
+            self.losses_angles.append(loss_angle)
+            self.losses_positions.append(loss_position)
             self._save_(dynamic_save=True)
             if verbose:
                 print(
@@ -92,8 +99,8 @@ class Train:
                     loss = loss_a + loss_p
                     del images, labels
                 self.val_losses.append(loss)
-                self.val_losses_a.append(loss_a)
-                self.val_losses_p.append(loss_p)
+                self.val_losses_angles.append(loss_a)
+                self.val_losses_positions.append(loss_p)
                 print(
                     f'For the epoch number {epoch + 1}: The training loss is {total_loss}.')
                 print(f"Loss_angle = {loss_a} and Loss Points =  {loss_p}")

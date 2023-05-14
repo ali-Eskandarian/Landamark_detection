@@ -39,9 +39,11 @@ class landmark_detection:
         trainer.initialize(loss_f="MSE")
         trained_model = trainer.train(train_loader, val_loader)
         trainer.plot_loss(trainer.val_losses, "Validation total Loss", "Val Loss")
-        trainer.plot_loss(trainer.val_losses_a, "Validation angle Loss", "Loss")
-        trainer.plot_loss(trainer.val_losses_p, "Validation position Loss", "Loss")
-        trainer.plot_loss(trainer.losses, "train total Loss", "Train Loss")
+        trainer.plot_loss(trainer.val_losses_angles, "Validation angle Loss", "Loss")
+        trainer.plot_loss(trainer.val_losses_positions, "Validation position Loss", "Loss")
+        trainer.plot_loss(trainer.losses, "Train total Loss", "Train Loss")
+        trainer.plot_loss(trainer.losses_angles, "Train angle Loss", "Loss")
+        trainer.plot_loss(trainer.losses_positions, "Train position Loss", "Loss")
         return trained_model
 
 
