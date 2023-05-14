@@ -1,9 +1,7 @@
-from load_data import Load_data
 import os
-import torch
 from model import Model
 from train import Train
-from load_data import Load_data
+from load_data import Dataset_lip
 from torch.utils.data import DataLoader
 
 class Run():
@@ -14,8 +12,9 @@ class Run():
 
     def dataset(self):
         main_folder_path = os.getcwd()
-        load = Load_data("train_data/list3.txt", "train_data")
-        data_loader = DataLoader(load, batch_size=self.batch_size, drop_last=True)
+        data = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Train_Images_f_1.csv",
+                            r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data")
+        data_loader = DataLoader(data, batch_size=self.batch_size, drop_last=True)
 
         return data_loader
     

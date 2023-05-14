@@ -45,6 +45,9 @@ class Evaluate():
             for (images, labels) in test_loader:
                 preds = self.model(images.to(self.device))
                 preds = torch.round(preds)
+
+
+
                 preds = preds.squeeze_()
                 tp += sum(preds*labels)
                 tn += sum(preds==labels) - sum(preds*labels)

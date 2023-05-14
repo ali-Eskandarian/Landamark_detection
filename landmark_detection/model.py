@@ -2,20 +2,34 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 import torch
+from functools import reduce
+from operator import __add__
+from torchsummary import summary as sm
+
+
+class Conv2dSamePadding(nn.Conv2d):
+    def __init__(self, *args, **kwargs):
+        super(Conv2dSamePadding, self).__init__(*args, **kwargs)
+        self.zero_pad_2d = nn.ZeroPad2d(reduce(__add__,
+                                             [(k // 2 + (k - 2 * (k // 2)) - 1, k // 2) for k in self.kernel_size[::-1]]))
+
+    def forward(self, x):
+        return self._conv_forward(self.zero_pad_2d(x), self.weight, self.bias)
+
 class Model(nn.Module):
   
   def __init__(self, initial_filter_size, batch_size):
     
     super(Model, self).__init__()
     self.batch_size = batch_size
-    self.conv1 = nn.Conv2d(3, initial_filter_size, 11, padding='same')
+    self.conv1 = Conv2dSamePadding(3, initial_filter_size, 11)
     self.batchn1 = nn.BatchNorm2d(initial_filter_size)
     self.pool = nn.MaxPool2d(2)
-    self.conv2 = nn.Conv2d(initial_filter_size, 2*initial_filter_size, 7, padding='same')
+    self.conv2 = Conv2dSamePadding(initial_filter_size, 2*initial_filter_size, 7)
     self.batchn2 = nn.BatchNorm2d(2*initial_filter_size)
-    self.conv3 = nn.Conv2d(2*initial_filter_size, 4*initial_filter_size, 5, padding='same')
+    self.conv3 = Conv2dSamePadding(2*initial_filter_size, 4*initial_filter_size, 5)
     self.batchn3 = nn.BatchNorm2d(4*initial_filter_size)
-    self.conv4 = nn.Conv2d(4*initial_filter_size, 8*initial_filter_size, 3, padding='same')
+    self.conv4 = Conv2dSamePadding(4*initial_filter_size, 8*initial_filter_size, 3)
     self.batchn4 = nn.BatchNorm2d(8*initial_filter_size)
     self.lin1 = nn.Linear(7*7*8*initial_filter_size, 64)
     self.lin2 = nn.Linear(64, 7)
@@ -49,7 +63,7 @@ class Model(nn.Module):
   def tl_model(self, main_model="resnet"):
     
     if main_model == "resnet":
-      main_model = torchvision.models.resnet18(weights='IMAGENET1K_V1')
+        main_model = torchvision.models.resnet18(weights='IMAGENET1K_V1')
 
     for param in main_model.parameters():
         param.requires_grad = False
@@ -58,3 +72,8 @@ class Model(nn.Module):
     main_model.fc = nn.Linear(num_out_features, 7)
 
     return main_model
+  
+
+if __name__ == "__main__":
+  model = Model(2, 16)
+  sm(model, (3, 112, 112))

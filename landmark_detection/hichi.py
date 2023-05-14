@@ -14,6 +14,10 @@ with open(labels_path, 'r') as list_of_labels:
         image_path = images_path + "/imgs/" + label_name
         njea.append(image_path)
         file_list.append(njea)
+<<<<<<< HEAD
+=======
+print(file_list)a
+>>>>>>> 446637a34fde3d681acc6a2253d12e998932fa28
 file_list = np.array(file_list)
 np.savetxt("Train_Images_normal.csv", file_list, delimiter=", ", fmt="% s")
 
