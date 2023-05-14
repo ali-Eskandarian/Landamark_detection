@@ -7,8 +7,8 @@ class CustomLoss(nn.Module):
     def __init__(self):
         super(CustomLoss, self).__init__()
 
-
-    def forward(self, output, target):
+    @staticmethod
+    def forward(output, target):
         loss = 0
         torch.pi = math.pi
         output = torch.cos(2 * torch.pi * (output - 0.5))
