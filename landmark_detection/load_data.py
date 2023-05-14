@@ -1,11 +1,6 @@
 import torch
-from torch.utils.data import IterableDataset, DataLoader
-import PIL
-from torchvision import transforms
-import torch, torchvision
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
-from torchvision import transforms
 from skimage import io
 import numpy as np
 
@@ -64,6 +59,9 @@ class Dataset_lip(Dataset):
             image = self.transform(image)
 
         return image, y_label
+
+    def get_len(self):
+        return len(self.annotations)
 
 
 data_train = Dataset_lip(r"C:\Users\ali\PycharmProjects\Lip_Movement_Detection\train_data\Train_Images_f_1.csv",
